@@ -1,21 +1,25 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
-version: 2.1
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 jobs:
   build:
-    docker:
-      - image: circleci/golang:1.8.1
+
+    runs-on: ubuntu-latest
+
     steps:
-      - checkout
-      - run: echo "master"
-  test:
-    docker:
-      - image: circleci/golang:1.8.1
-    steps:
-      - checkout
-      - run: echo "hello world"
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - test
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
