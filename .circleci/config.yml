@@ -4,6 +4,19 @@ version: 2.1
 orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.8.1
+    steps:
+      - checkout
+      - run: echo "master"
+  test:
+    docker:
+      - image: circleci/golang:1.8.1
+    steps:
+      - checkout
+      - run: echo "hello world"
 # Orchestrate or schedule a set of jobs
 workflows:
   # Name the workflow "welcome"
@@ -11,4 +24,5 @@ workflows:
     # Run the welcome/run job in its own container
     jobs:
       - welcome/run
-      -run:echo "Hello CircleCI!"
+      - build
+      - test
